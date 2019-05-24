@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Telegram.Bot;
@@ -36,17 +37,22 @@ namespace FileInfoBot
                     {
                         var stringBuilder = new StringBuilder();
 
-                        if (update.Message.Photo != null && update.Message.Photo[0] != null)
+                        if (update.Message.Photo != null && update.Message.Photo.Length > 0)
                         {
+                            var biggestPhoto = update.Message.Photo.OrderByDescending(p => p.Width * p.Height).First();
+
                             stringBuilder.AppendLine("Type: Photo");
                             stringBuilder.AppendLine();
-                            stringBuilder.AppendLine($"File ID: {update.Message.Photo[0].FileId}");
-                            stringBuilder.AppendLine($"File size: {update.Message.Photo[0].FileSize}");
-                            stringBuilder.AppendLine($"Width: {update.Message.Photo[0].Width} px");
-                            stringBuilder.AppendLine($"Height: {update.Message.Photo[0].Height} px");
+                            stringBuilder.AppendLine($"File ID: {biggestPhoto.FileId}");
+                            stringBuilder.AppendLine($"File size: {biggestPhoto.FileSize}");
+                            stringBuilder.AppendLine($"Width: {biggestPhoto.Width} px");
+                            stringBuilder.AppendLine($"Height: {biggestPhoto.Height} px");
                         }
 
-                        await botClient.SendTextMessageAsync(update.Message.Chat.Id, stringBuilder.ToString(), replyToMessageId: update.Message.MessageId);
+                        if (stringBuilder.Length > 0)
+                        {
+                            await botClient.SendTextMessageAsync(update.Message.Chat.Id, stringBuilder.ToString(), replyToMessageId: update.Message.MessageId);
+                        }
                     }
                 }
             }
