@@ -39,10 +39,11 @@ namespace FileInfoBot
                         if (update.Message.Photo != null && update.Message.Photo[0] != null)
                         {
                             stringBuilder.AppendLine("Type: Photo");
-                            stringBuilder.Append($"File ID: {update.Message.Photo[0].FileId}");
-                            stringBuilder.Append($"File size: {update.Message.Photo[0].FileSize}");
-                            stringBuilder.Append($"Width: {update.Message.Photo[0].Width} px");
-                            stringBuilder.Append($"Height: {update.Message.Photo[0].Height} px");
+                            stringBuilder.AppendLine();
+                            stringBuilder.AppendLine($"File ID: {update.Message.Photo[0].FileId}");
+                            stringBuilder.AppendLine($"File size: {update.Message.Photo[0].FileSize}");
+                            stringBuilder.AppendLine($"Width: {update.Message.Photo[0].Width} px");
+                            stringBuilder.AppendLine($"Height: {update.Message.Photo[0].Height} px");
                         }
 
                         await botClient.SendTextMessageAsync(update.Message.Chat.Id, stringBuilder.ToString(), replyToMessageId: update.Message.MessageId);
